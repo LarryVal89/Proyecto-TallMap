@@ -1,0 +1,15 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/api/auth/register/route": "app/api/auth/register/route.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/talleres/route": "app/api/talleres/route.js",
+  "/talleres/page": "app/talleres/page.js",
+  "/resenas/page": "app/resenas/page.js",
+  "/api/resenas/route": "app/api/resenas/route.js",
+  "/citas/page": "app/citas/page.js",
+  "/api/citas/route": "app/api/citas/route.js",
+  "/api/vehiculos/route": "app/api/vehiculos/route.js",
+  "/api/talleres/[id]/servicios/route": "app/api/talleres/[id]/servicios/route.js",
+  "/perfil/page": "app/perfil/page.js"
+}

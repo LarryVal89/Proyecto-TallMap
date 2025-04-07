@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int        @id @default(autoincrement())
+  nombre    String
+  email     String     @unique
+  telefono  String?    // Hacemos el teléfono opcional
+  password  String
+  rol       Rol        @default(USUARIO)
+  vehiculos Vehiculo[]
+  citas     Cita[]
+  resenas   Resena[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Taller {
+  id          Int         @id @default(autoincrement())
+  nombre      String
+  direccion   String
+  latitud     Float
+  longitud    Float
+  telefono    String
+  tipo        TipoTaller
+  email       String
+  horario     String
+  descripcion String
+  fotos       Foto[]
+  servicios   Servicio[]
+  citas       Cita[]
+  resenas     Resena[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Vehiculo {
+  id         Int      @id @default(autoincrement())
+  marca      String
+  modelo     String
+  anio       Int      // Cambiado de "año" a "anio" para evitar caracteres especiales
+  cilindraje Int
+  tipo       String   // Moto o Carro
+  placa      String?
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  citas      Cita[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Cita {
+  id           Int          @id @default(autoincrement())
+  usuario      Usuario      @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
+  taller       Taller       @relation(fields: [tallerId], references: [id])
+  tallerId     Int
+  vehiculo     Vehiculo     @relation(fields: [vehiculoId], references: [id])
+  vehiculoId   Int
+  servicio     Servicio     @relation(fields: [servicioId], references: [id])
+  servicioId   Int
+  fecha        DateTime
+  estado       EstadoCita   @default(PENDIENTE)
+  descripcion  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Resena {
+  id           Int      @id @default(autoincrement())
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
+  taller       Taller   @relation(fields: [tallerId], references: [id])
+  tallerId     Int
+  calificacion Int
+  comentario   String
+  fecha        DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Foto {
+  id        Int      @id @default(autoincrement())
+  url       String
+  taller    Taller   @relation(fields: [tallerId], references: [id])
+  tallerId  Int
+  createdAt DateTime @default(now())
+}
+
+model Servicio {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  precio      Float
+  duracion    Int      // Duración en minutos
+  taller      Taller   @relation(fields: [tallerId], references: [id])
+  tallerId    Int
+  citas       Cita[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Rol {
+  ADMIN
+  USUARIO
+  TALLER
+}
+
+enum TipoTaller {
+  AUTOS
+  MOTOS
+  AMBOS
+}
+
+enum EstadoCita {
+  PENDIENTE
+  CONFIRMADA
+  COMPLETADA
+  CANCELADA
+}
+
+enum TipoServicio {
+  MANTENIMIENTO
+  REPARACION
+  DIAGNOSTICO
+  OTRO
+} 
